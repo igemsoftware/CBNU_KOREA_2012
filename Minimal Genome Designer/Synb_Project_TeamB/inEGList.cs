@@ -1,0 +1,156 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Synb_Project_TeamB
+{
+    public partial class inEGList : Form
+    {
+        Designer desinger;
+
+        InsertedEG sectionEG;
+        InsertedEG allEG;
+
+        double[] frequence = { 20.06, 17.53, 18.32, 20.08, 20.57, 19.54 ,19.25, 22.25, 30.90, 44.91, 60.68, 74.15, 81.58, 82.26, 79.45, 76.82, 77.82, 81.97, 83.89, 77.64 };
+
+        bool isPaintedChecbox = false;
+
+        public inEGList(Designer desinger)
+        {
+            InitializeComponent();
+            this.desinger = desinger;
+            sectionEG = this.desinger.secInsertedEG[this.desinger.indexOfCircle];
+            allEG = this.desinger.insertedEG;
+
+            TBsection.Text = (desinger.indexOfCircle + 1) + "";
+            reloadList();
+            ChangePlus();
+        }
+        private void DGVlist_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex == -1 && !isPaintedChecbox)
+            {
+                e.PaintBackground(e.ClipBounds, false);
+
+                Point pt = e.CellBounds.Location;  // where you want the bitmap in the cell
+
+                int nChkBoxWidth = 15;
+                int nChkBoxHeight = 15;
+                int offsetx = (e.CellBounds.Width - nChkBoxWidth) / 2;
+                int offsety = (e.CellBounds.Height - nChkBoxHeight) / 2;
+
+                pt.X += offsetx;
+                pt.Y += offsety;
+
+                CheckBox cb = new CheckBox();
+                cb.Size = new Size(nChkBoxWidth, nChkBoxHeight);
+                cb.Location = pt;
+                cb.CheckedChanged += new EventHandler(gvSheetListCheckBox_CheckedChanged);
+
+                ((DataGridView)sender).Controls.Add(cb);
+
+                e.Handled = true;
+                isPaintedChecbox = true;
+            }
+        }
+
+        private void reloadList()
+        {
+            for (int i = 0; i < sectionEG.cnt; i++)
+            {
+                String synb_uid = ViewerData.getEG_UID(i);
+                int[] freqs = ViewerData.getEG_Freq(i);
+                int totalFreq = 0;
+                for (int j = 0; j < 20; j++)
+                {
+                    totalFreq += freqs[j];
+                }
+                String freq = sectionEG.freq[i];
+                String GO_Term = sectionEG.go_term[i];
+                String Product = sectionEG.product[i];
+                String COG = sectionEG.cog[i];
+                String STRAND = sectionEG.Strand[i];
+
+                DGVlist.Rows.Add();
+                DGVlist["CLcheck", i].Value = false;
+                DGVlist["CLsynb_uid", i].Value = synb_uid;
+                DGVlist["CLfreq", i].Value = freq;
+                DGVlist["CLGOTerm", i].Value = GO_Term;
+                DGVlist["CLproduct", i].Value = Product;
+                DGVlist["CLCOG", i].Value = COG;
+                DGVlist["STRAND", i].Value = STRAND;
+            }
+        }
+
+        private void gvSheetListCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow r in DGVlist.Rows)
+            {
+                r.Cells["CLcheck"].Value = ((CheckBox)sender).Checked;
+            }
+        }
+
+        private void BTdelete_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < DGVlist.Rows.Count; i++)
+            {
+                if ((bool)DGVlist.Rows[i].Cells[0].Value == true)
+                {
+                    sectionEG.deleteEG(DGVlist.Rows[i].Cells["CLsynb_uid"].Value.ToString());
+                    allEG.deleteEG(DGVlist.Rows[i].Cells["CLsynb_uid"].Value.ToString());
+                }
+            }
+            for (int i = DGVlist.Rows.Count - 1; i >= 0; i--)
+            {
+                DGVlist.Rows.RemoveAt(i);
+            }
+            reloadList();
+            desinger.deleteListAll();
+            ViewerData.selectEGList(desinger.indexOfCircle);
+            desinger.reloadList();
+            desinger.PBdesign.Value = allEG.cnt;
+            desinger.LBcurrEG.Text = "" + desinger.PBdesign.Value;
+            desinger.PBsecDesign.Value = sectionEG.cnt;
+            desinger.LBsecCurEG.Text = "" + desinger.PBsecDesign.Value;
+
+            if (desinger.PBdesign.Value != desinger.PBdesign.Maximum)
+                desinger.BTdesign.Enabled = false;
+        }
+
+        private void DGVlist_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0)
+            {
+                DGVlist.Rows[e.RowIndex].Cells["CLcheck"].Value = !(bool)(DGVlist.Rows[e.RowIndex].Cells["CLcheck"].Value);
+            }
+        }
+
+        private void ChangePlus()
+        {
+            try
+            {
+                int Plus_STRAND = (int)((sectionEG.cnt * frequence[this.desinger.indexOfCircle] / 100));
+                DGVlist.Sort(DGVlist.Columns["STRAND"], ListSortDirection.Descending);
+                for (int i = 0; i < Plus_STRAND; i++)
+                {
+                    DGVlist["CSTRAND", i].Value = "+";
+                    this.desinger.secInsertedEG[this.desinger.indexOfCircle].ST_PLUS[i] = "+";
+                }
+                for (int i = Plus_STRAND; i < sectionEG.cnt; i++)
+                {
+                    DGVlist["CSTRAND", i].Value = "-";
+                    this.desinger.secInsertedEG[this.desinger.indexOfCircle].ST_PLUS[i] = "-";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error! : Block insert Data!");
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+http://partsregistry.org/Part:BBa_K371052
+BBa_K371052
+K371052
+RFC 53 easy expression biobrick
+caatacgcaaaccgcctctccccgcgcgttggccgattcattaatgcagctggcacgacaggtttcccgactggaaagcgggcagtgagcgcaacgcaattaatgtgagttagctcactcattaggcaccccaggctttacactttatgcttccggctcgtatgttgtgtggaattgtgagcggataacaatttcacacatactagagaaagaggagaaatactagatgtgaagagcgctagcgctcttcaggttaataacgctgatagtgctagtgtagatcgctactagagccaggcatcaaataaaacgaaaggctcagtcgaaagactgggcctttcgttttatctgttgtttgtcggtgaacgctctctactagagtcacactggctcaccttcgggtgggcctttctgcgtttata
+5
+http://partsregistry.org/Part:BBa_R0010
+BBa_R0010
+R0010
+promoter (lacI regulated)
+http://partsregistry.org/Part:BBa_B0034
+BBa_B0034
+B0034
+RBS (Elowitz 1999) -- defines RBS efficiency
+http://partsregistry.org/Part:BBa_K371045
+BBa_K371045
+K371045
+ATG-MSF-NheI-MPF-GGT
+http://partsregistry.org/Part:BBa_B0010
+BBa_B0010
+B0010
+T1 from E. coli rrnB
+http://partsregistry.org/Part:BBa_B0012
+BBa_B0012
+B0012
+TE from coliphageT7

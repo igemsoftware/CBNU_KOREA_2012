@@ -1,0 +1,741 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Xml;
+using System.Threading;
+
+namespace Synb_Project_TeamB
+{
+    public partial class Designer : Form
+    {
+        const int TOTALEG = 478;
+
+        Home_View HV;
+
+        loadingWindow LW = new loadingWindow();
+
+        GraphicsPath[] myPath = new GraphicsPath[20];
+        SolidBrush[] myBrush = new SolidBrush[20];
+        Brush blackBrush = new SolidBrush(Color.Black);
+        Pen[] myPen = new Pen[20];
+        int[] MaxCnt = new int[20];
+        private int PointSelect = 21;
+        private bool IsCircle = false;
+        bool isPaintedChecbox = false;
+        private bool isSave = false;
+        private String savename;
+        public int indexOfCircle = 0;
+        private Font font = new Font("Tahoma", 12, FontStyle.Regular, GraphicsUnit.Point);
+        int numOfSkip = 0;
+
+        public InsertedEG insertedEG = new InsertedEG();
+        public InsertedEG[] secInsertedEG = new InsertedEG[20];
+
+        public Designer(Home_View _HV)
+        {
+            HV = _HV;
+            InitializeComponent();
+           
+            LW.Show();
+
+            ViewerData.selectEGList();
+
+            //init Data Structure
+            for (int i = 0; i < 20; i++)
+            {
+                secInsertedEG[i] = new InsertedEG();
+            }
+
+            PBdesign.Maximum = ViewerData.totalCnt;
+            LBtotalEG.Text = "" + PBdesign.Maximum;
+
+            ViewerData.selectEGList(indexOfCircle);
+
+            PBsecDesign.Maximum = ViewerData.cnt;
+            LBsecTotalEG.Text = "" + PBsecDesign.Maximum;
+
+            LBsecCurEG.Text = "" + secInsertedEG[indexOfCircle].cnt;
+
+            LBcurrEG.Text = "" + insertedEG.cnt;
+
+            BTdesign.Enabled = false;
+
+            TBsection.Text = (indexOfCircle + 1) + "";
+
+            reloadList();
+
+            //LW.Hide();
+
+            /*
+            Thread initThread = new Thread(new ThreadStart(initDesignData));
+            initThread.Start();
+            */
+            MaxCntReload();
+        }
+        public void MaxCntReload()
+        {
+            for (int i = 0; i < MaxCnt.Length; i++)
+            {
+                deleteListAll();
+                ViewerData.selectEGList(i);
+                reloadList();
+                MaxCnt[i] = ViewerData.cnt;
+                Console.WriteLine(MaxCnt[i]);
+            }
+        }
+
+        public void initDesignData()
+        {
+        
+        }
+
+        public void deleteListAll()
+        {
+            for (int i = ViewerData.cnt - 1 - numOfSkip; i >= 0; i--)
+            {
+                DGVlist.Rows.RemoveAt(i);
+            }
+        }
+        public void reloadList()
+        {
+            numOfSkip = 0;
+
+            for (int i = 0; i < ViewerData.cnt; i++)
+            {
+                String synb_uid = ViewerData.getEG_UID(i);
+                int[] freqs = ViewerData.getEG_Freq(i);
+                int totalFreq = 0;
+                for (int j = 0; j < 20; j++)
+                {
+                    totalFreq += freqs[j];
+                }
+                String freq = /*(int)*/(((double)freqs[indexOfCircle] / totalFreq) * 100.0).ToString("F2");
+                if (freq.Length == 4)
+                    freq = "0" + freq;
+                String GO_Term = ViewerData.getEG_GOTerm(i);
+                String Product = ViewerData.getEG_Product(i);
+                String COG = ViewerData.getEG_COG(i);
+
+                if (insertedEG.isThereEG(synb_uid))
+                {
+                    numOfSkip++;
+                    continue;
+                }
+
+                DGVlist.Rows.Add();
+                DGVlist["CLcheck", i - numOfSkip].Value = false;
+                DGVlist["CLsynb_uid", i - numOfSkip].Value = synb_uid;
+                DGVlist["CLfreq", i - numOfSkip].Value = freq;
+                DGVlist["CLGOTerm", i - numOfSkip].Value = GO_Term;
+                DGVlist["CLproduct", i - numOfSkip].Value = Product;
+                DGVlist["CLCOG", i - numOfSkip].Value = COG;
+
+            }
+        }
+
+        private void TBsearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 13)
+                BTsearch_Click(null, null);
+        }
+
+        private void BTsearch_Click(object sender, EventArgs e)
+        {
+            deleteListAll();
+
+            if (TBsearch.Text.Equals(""))
+            {
+                ViewerData.selectEGList(indexOfCircle);
+            }
+            else if (CBsearch.SelectedIndex == 0)
+            {
+                ViewerData.selectEGList_synb_uid(indexOfCircle, TBsearch.Text);
+            }
+            else if (CBsearch.SelectedIndex == 1)
+            {
+                ViewerData.selectEGList_GOTerm(indexOfCircle, TBsearch.Text);
+            }
+            else if (CBsearch.SelectedIndex == 2)
+            {
+                ViewerData.selectEGList_Product(indexOfCircle, TBsearch.Text);
+            }
+            else if (CBsearch.SelectedIndex == 3)
+            {
+                ViewerData.selectEGList_COG(indexOfCircle, TBsearch.Text);
+            }
+
+            reloadList();
+        }
+
+        private void onDesignerClose(object sender, FormClosedEventArgs e)
+        {
+            HV.Show();
+        }
+
+        private void PieDraw(Graphics graphics)
+        {
+            Random ColorRamdon = new Random();
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            int width = 480;
+            int height = 480;
+            decimal[] vals = new decimal[20];
+            for (int i = 0; i < 20; i++)
+            {
+                vals[i] = 10;
+                myBrush[i] = new SolidBrush(Color.FromArgb(ColorRamdon.Next(100, 255), ColorRamdon.Next(100, 255), ColorRamdon.Next(100, 255)));
+                myPen[i] = new Pen(myBrush[i], 3);
+            }
+            // Sum the inputs to get the total
+            decimal total = 0.0m;
+            foreach (decimal val in vals)
+                total += val;
+            // Draw the pie chart
+            float start = 0.0f;
+            float end = 0.0f;
+            decimal current = 0.0m;
+            for (int i = 0; i < vals.Length; i++)
+            {
+                current += vals[i];
+                start = end;
+                end = (float)(current / total) * 360.0f;
+                myPath[i] = new GraphicsPath();
+                myPath[i].AddPie((PieBox.Width - 480) / 2, 20.0f, width, height, start, end - start);
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                graphics.FillPath(myBrush[i], myPath[i]);
+            }
+            graphics.FillEllipse(new SolidBrush(Color.White), ((PieBox.Width - 480) / 2) + 210, 230, 60, 60);
+        }
+
+        private void PieBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            IsCircle = false;
+            int PieX = (PieBox.Width - 480) / 2;
+            int PieY = 20;
+            if (e.X < PieBox.Width - PieX && e.X > PieX && e.Y < PieBox.Height - PieY && e.Y > 20)
+            {
+                int a = 0;
+                int b = 0;
+                double c = 0;
+                int d = 0;
+
+
+                int jx = PieBox.Width / 2;
+                int jy = PieBox.Height / 2;
+                if (jx <= e.X && jy <= e.Y)
+                {
+                    a = e.Y - jy;
+                    b = e.X - jx;
+                    c = Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+                    d = (int)(Math.Asin(a / c) * (180 / Math.PI));
+                }
+                else if (jx > e.X && jy <= e.Y)
+                {
+                    a = e.Y - jy;
+                    b = jx - e.X;
+                    c = Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+                    d = (int)(180 - (Math.Asin(a / c) * (180 / Math.PI)));
+                }
+                else if (jx > e.X && jy > e.Y)
+                {
+                    a = jy - e.Y;
+                    b = jx - e.X;
+                    c = Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+                    d = (int)(180 + (Math.Asin(a / c) * (180 / Math.PI)));
+                }
+                else if (jx <= e.X && jy > e.Y)
+                {
+                    a = jy - e.Y;
+                    b = e.X - jx;
+                    c = Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+                    d = (int)(360 - (Math.Asin(a / c) * (180 / Math.PI)));
+                }
+                if (c < 240 && c > 30)                                        //원의 반지름 안에 들어갈 때 
+                {
+                    int swi = d / 18;
+                    //Console.WriteLine("현재값 : " + d + "계산 값 : " + swi);
+                    switch (swi)
+                    {
+                        case 0:
+                            PointSelect = 0;
+                            break;
+                        case 1:
+                            PointSelect = 1;
+                            break;
+                        case 2:
+                            PointSelect = 2;
+                            break;
+                        case 3:
+                            PointSelect = 3;
+                            break;
+                        case 4:
+                            PointSelect = 4;
+                            break;
+                        case 5:
+                            PointSelect = 5;
+                            break;
+                        case 6:
+                            PointSelect = 6;
+                            break;
+                        case 7:
+                            PointSelect = 7;
+                            break;
+                        case 8:
+                            PointSelect = 8;
+                            break;
+                        case 9:
+                            PointSelect = 9;
+                            break;
+                        case 10:
+                            PointSelect = 10;
+                            break;
+                        case 11:
+                            PointSelect = 11;
+                            break;
+                        case 12:
+                            PointSelect = 12;
+                            break;
+                        case 13:
+                            PointSelect = 13;
+                            break;
+                        case 14:
+                            PointSelect = 14;
+                            break;
+                        case 15:
+                            PointSelect = 15;
+                            break;
+                        case 16:
+                            PointSelect = 16;
+                            break;
+                        case 17:
+                            PointSelect = 17;
+                            break;
+                        case 18:
+                            PointSelect = 18;
+                            break;
+                        case 19:
+                            PointSelect = 19;
+                            break;
+                    }
+                    IsCircle = true;
+                    PieBox.Invalidate();
+                }
+                else
+                {
+                    PointSelect = 21;
+                    PieBox.Invalidate();
+                }
+            }
+        }
+
+        private void Designer_Load(object sender, EventArgs e)
+        {
+            Graphics g = PieBox.CreateGraphics();
+            PieDraw(g);
+        }
+
+
+
+
+        private void PieBox_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphics = e.Graphics;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            Double a = 2 * Math.PI / 20;
+            Double CenterX = PieBox.Width / 2;
+            Double CenterY = PieBox.Height / 2;
+            Double radius = PieBox.Height / 2;
+            Double x1;
+            Double y1;
+            Double t;
+            for (int i = 0; i < 20; i++)
+            {
+// 
+//                 Console.WriteLine("x1 =" + x1 + "y1 =" + y1);
+//                 Console.WriteLine("pathx=" + myPath[i].PathPoints[2].X + "pathy =" + myPath[i].PathPoints[2].Y);
+                graphics.FillPath(myBrush[i], myPath[i]);
+                graphics.DrawPath(new Pen(Color.White, 3), myPath[i]);
+
+//                graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush, new PointF((float)x1, (float)y1));
+
+//                 if ((CenterX - radius * Math.Sin(t)) >= CenterX)
+//                 {
+//                     if ((CenterY - radius * Math.Cos(t)) >= CenterY)
+//                     {
+//                         graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+//                             (int)(CenterX - radius * Math.Sin(t) * 0.90), (int)(CenterY - radius * Math.Cos(t)));
+//                     }
+//                     else
+//                     {
+//                         graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+//                             (int)(CenterX - radius * Math.Sin(t) * 0.90), (int)(CenterY - radius * Math.Cos(t)));
+//                     }
+//                 }
+//                 else
+//                 {
+//                     if (CenterY - radius * Math.Sin(t) >= CenterY)
+//                     {
+//                         graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+//                             (int)(CenterX - radius * Math.Sin(t) * 0.90), (int)(CenterY - radius * Math.Cos(t)));
+//                     }
+//                     else
+//                     {
+// 
+//                         graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+//                             (int)(CenterX - radius * Math.Sin(t) * 0.90), (int)(CenterY - radius * Math.Cos(t)));
+//                     }
+//                 }
+
+
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                t = -a * i;
+                x1 = CenterX - radius * Math.Sin(t) * 0.80;
+                y1 = CenterY - radius * Math.Cos(t) * 0.80;
+                //graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush, new PointF((float)x1,(float)y1));
+
+                if ((CenterX - radius * Math.Sin(t) * 0.80) >= CenterX)
+                {
+                    if ((CenterY - radius * Math.Cos(t) * 0.80) >= CenterY)
+                    {
+                        graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+                           new PointF((float)x1, (float)y1));
+                        Console.WriteLine("이구역은 1번 : " + i);
+                    }
+                    else
+                    {
+                        graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+                            new PointF((float)x1 + 10, (float)y1));
+                        Console.WriteLine("이구역은 2번 : " + i);
+                    }
+                }
+                else
+                {
+                    if (CenterY - radius * Math.Sin(t) * 0.80 >= CenterY)
+                    {
+                        graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+                            new PointF((float)x1 - 50, (float)y1 + 10));
+                        Console.WriteLine("이구역은 3번 : " + i);
+                    }
+                    else
+                    {
+
+                        graphics.DrawString(secInsertedEG[i].cnt + " / " + MaxCnt[i] + "", font, blackBrush,
+                           new PointF((float)x1, (float)y1 - 10));
+                        Console.WriteLine("이구역은 4번 : " + i);
+                    }
+                }
+            }
+                if (PointSelect < 20)
+                    graphics.DrawPath(new Pen(Color.DarkSlateGray, 10), myPath[PointSelect]);
+            graphics.FillEllipse(new SolidBrush(Color.White), ((PieBox.Width - 480) / 2) + 210, 230, 60, 60);
+        }
+
+        private void PieBox_Click(object sender, EventArgs e)
+        {
+            if (IsCircle)
+            {
+                //init CheckBox
+                //DGVlist.Columns[0].HeaderCell.
+
+                //MessageBox.Show("현재 선택한 번호는 :" + PointSelect + "입니다.");
+                if (PointSelect > 14)
+                    indexOfCircle = PointSelect - 15;
+                else
+                    indexOfCircle = PointSelect + 5;
+                TBsection.Text = (indexOfCircle + 1) + "";
+
+                deleteListAll();
+                ViewerData.selectEGList(indexOfCircle);
+                reloadList();
+
+                //Update UI of Progress Infomation
+                PBsecDesign.Maximum = ViewerData.cnt;
+                LBsecTotalEG.Text = "" + PBsecDesign.Maximum;
+                PBsecDesign.Value = secInsertedEG[indexOfCircle].cnt;
+                LBsecCurEG.Text = "" + PBsecDesign.Value;
+
+            }
+        }
+
+        private void BTinsert_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < DGVlist.Rows.Count; i++)
+            {
+                if ((bool)DGVlist.Rows[i].Cells["CLcheck"].Value == true)
+                {
+                    //update totally inserted EG
+                    String s = DGVlist.Rows[i].Cells["CLsynb_uid"].Value.ToString();
+                    String f = DGVlist.Rows[i].Cells["CLfreq"].Value.ToString();
+                    String g = DGVlist.Rows[i].Cells["CLGOTerm"].Value.ToString();
+                    String p = DGVlist.Rows[i].Cells["CLproduct"].Value.ToString();
+                    String c = DGVlist.Rows[i].Cells["CLCOG"].Value.ToString();
+
+                    insertedEG.insertEG(s,f,g,p,c);
+                    PBdesign.Value = insertedEG.cnt;
+                    LBcurrEG.Text = "" + PBdesign.Value;
+
+                    //update sectionly inserted EG
+                    secInsertedEG[indexOfCircle].insertEG(s,f,g,p,c);
+                    PBsecDesign.Value = secInsertedEG[indexOfCircle].cnt;
+                    LBsecCurEG.Text = "" + PBsecDesign.Value;
+
+                    DGVlist.Rows.Remove(DGVlist.Rows[i]);
+                    ViewerData.cnt--;
+                    i--;
+                }
+            }
+            PieBox.Invalidate();
+            if (PBdesign.Value == PBdesign.Maximum)
+            {
+                BTdesign.Enabled = true;
+                MessageBox.Show("Insertion is all done! If you want to confirm your design, press \"Design\" Button!");
+            }
+        }
+
+        private void DGVlist_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex == -1 && !isPaintedChecbox)
+            {
+                e.PaintBackground(e.ClipBounds, false);
+
+                Point pt = e.CellBounds.Location;  // where you want the bitmap in the cell
+
+                int nChkBoxWidth = 15;
+                int nChkBoxHeight = 15;
+                int offsetx = (e.CellBounds.Width - nChkBoxWidth) / 2;
+                int offsety = (e.CellBounds.Height - nChkBoxHeight) / 2;
+
+                pt.X += offsetx;
+                pt.Y += offsety;
+
+                CheckBox cb = new CheckBox();
+                cb.Size = new Size(nChkBoxWidth, nChkBoxHeight);
+                cb.Location = pt;
+                cb.CheckedChanged += new EventHandler(gvSheetListCheckBox_CheckedChanged);
+
+                ((DataGridView)sender).Controls.Add(cb);
+
+                e.Handled = true;
+                isPaintedChecbox = true;
+            }
+        }
+
+        private void gvSheetListCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow r in DGVlist.Rows)
+            {
+                r.Cells["CLcheck"].Value = ((CheckBox)sender).Checked;
+            }
+        }
+
+        private void DGVlist_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0)
+            {
+                //Console.WriteLine(e.RowIndex + "/" + !(bool)(DGVlist.Rows[e.RowIndex].Cells["CLcheck"].Value));
+                DGVlist.Rows[e.RowIndex].Cells["CLcheck"].Value = !(bool)(DGVlist.Rows[e.RowIndex].Cells["CLcheck"].Value);
+            }
+        }
+
+        private void PBdesign_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BTdesign_Click(object sender, EventArgs e)
+        {
+            saveAsToolStripMenuItem_Click(null, null);
+        }
+
+        private void PBsecDesign_Click(object sender, EventArgs e)
+        {
+            inEGList eglist = new inEGList(this);
+            eglist.Show();
+        }
+
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            if (!isSave)
+            {
+                savefile.InitialDirectory = @"\";
+                savefile.Title = "Save Xml File";
+                savefile.DefaultExt = "xml";
+                savefile.AddExtension = true;
+                savefile.Filter = "XML(*.xml)|*xml";
+                savefile.RestoreDirectory = true;
+                if (savefile.ShowDialog() == DialogResult.OK)
+                {
+                    XmlDocument xmldoc = createXml();
+                    xmldoc.Save(savefile.FileName);
+                    savename = savefile.FileName;
+                    isSave = true;
+                }
+            }
+            else
+            {
+                XmlDocument xmldoc = createXml();
+                xmldoc.Save(savename);
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            savefile.InitialDirectory = @"\";
+            savefile.Title = "Save Xml File";
+            savefile.DefaultExt = "xml";
+            savefile.AddExtension = true;
+            savefile.Filter = "XML(*.xml)|*xml";
+            savefile.RestoreDirectory = true;
+            if (savefile.ShowDialog() == DialogResult.OK)
+            {
+                XmlDocument xmldoc = createXml();
+                xmldoc.Save(savefile.FileName);
+                savename = savefile.FileName;
+                isSave = true;
+            }
+        }
+
+
+
+
+        private XmlDocument createXml()
+        {
+            int count = 0;
+            XmlDocument Doc = new XmlDocument();
+            XmlNode newDec = Doc.CreateNode("element", "Block", "");
+            XmlNode KeyNode = null;
+            XmlNode ChildData = null;
+            for (char name = 'A'; name <= 'T'; name++)
+            {
+                KeyNode = Doc.CreateNode("element", Convert.ToString(name), "");
+
+                if (secInsertedEG[count].cnt != 0)
+                {
+                    for (int iIndex = 0; iIndex < secInsertedEG[count].cnt; iIndex++)
+                    {
+                        ChildData = Doc.CreateNode("element","Synb_uid","");
+                        ChildData.InnerText = secInsertedEG[count].getEG(iIndex);
+                        KeyNode.AppendChild(ChildData);
+                        ChildData = null;
+                    }
+                }
+                newDec.AppendChild(KeyNode);
+                KeyNode = null;
+                count++;
+            }
+            Doc.AppendChild(newDec);
+            return Doc;
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("This working clear?", "Clear", MessageBoxButtons.YesNo) == DialogResult.Yes)       //메세지 박스를 띄어 초기화 여부를 물음
+            {
+                deleteListAll();
+                insertedEG.cnt = 0;
+                for (int i = 0; i < 20; i++)
+                    secInsertedEG[i].cnt = 0;
+
+                indexOfCircle = 0;
+                ViewerData.selectEGList(indexOfCircle);
+                reloadList();
+
+                PBdesign.Value = insertedEG.cnt;
+                LBcurrEG.Text = "" + PBdesign.Value;
+
+                PBsecDesign.Value = secInsertedEG[indexOfCircle].cnt;
+                LBsecCurEG.Text = "" + PBsecDesign.Value;
+                
+                OpenFileDialog openfile = new OpenFileDialog();
+                openfile.Filter = "Xml Files|*.xml|All Files|*.*";
+                openfile.FilterIndex = 1;
+                openfile.RestoreDirectory = true;                   //파일을 연다
+                    
+                try
+                {
+                    if (openfile.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            XmlDocument xmlDoc = new XmlDocument();
+                            xmlDoc.Load(openfile.FileName);
+
+                            XmlNodeList BlockList = xmlDoc.SelectNodes("/Block");          //파싱을 시작한다.
+                            foreach (XmlNode bl in BlockList)
+                            {
+                                //Console.WriteLine(bl.Name);
+                                XmlNodeList xnl = bl.ChildNodes;
+                                foreach (XmlNode xnn in xnl)
+                                {
+                                    Console.WriteLine(xnn.Name);
+                                    XmlNodeList NameList = xnn.ChildNodes;
+                                    foreach (XmlNode synb_n in NameList)
+                                    {
+                                        if (synb_n.InnerText != null)
+                                        {
+                                            String name = synb_n.InnerText;
+                                            Console.WriteLine(name);
+                                            deleteListAll();
+                                            ViewerData.selectEGList(indexOfCircle);
+                                            reloadList();
+                                            for (int i = 0; i < DGVlist.Rows.Count; i++)
+                                            {
+                                                //Console.WriteLine(DGVlist.Rows[i].Cells["CLsynb_uid"].Value.ToString());
+                                                if (name.Equals(DGVlist.Rows[i].Cells["CLsynb_uid"].Value.ToString()))      //불러온 파싱 값과 같으면 집어넣는다.
+                                                {
+                                                    Console.WriteLine(name + " 을 저장했다" + xnn.Name + "에");
+                                                    String s = DGVlist.Rows[i].Cells["CLsynb_uid"].Value.ToString();
+                                                    String f = DGVlist.Rows[i].Cells["CLfreq"].Value.ToString();
+                                                    String g = DGVlist.Rows[i].Cells["CLGOTerm"].Value.ToString();
+                                                    String p = DGVlist.Rows[i].Cells["CLproduct"].Value.ToString();
+                                                    String c = DGVlist.Rows[i].Cells["CLCOG"].Value.ToString();
+
+                                                    insertedEG.insertEG(s, f, g, p, c);
+                                                    PBdesign.Value = insertedEG.cnt;
+                                                    LBcurrEG.Text = "" + PBdesign.Value;
+
+                                                    //update sectionly inserted EG
+                                                    secInsertedEG[indexOfCircle].insertEG(s, f, g, p, c);
+                                                    PBsecDesign.Value = secInsertedEG[indexOfCircle].cnt;
+                                                    LBsecCurEG.Text = "" + PBsecDesign.Value;
+
+                                                    DGVlist.Rows.Remove(DGVlist.Rows[i]);
+                                                    ViewerData.cnt--;
+                                                    i--;
+                                                }
+                                            }
+                                            name = null;
+                                        }
+                                    }
+                                    indexOfCircle++;
+                                }
+                                
+                            }
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            MessageBox.Show("Xml File Error! : " + ex.Message);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("File open error : " + ex.Message);
+                }
+            }
+        }
+    }
+}

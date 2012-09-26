@@ -1,0 +1,174 @@
+﻿using System;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using MySql.Data.MySqlClient;
+using System.Data;
+
+namespace Synb_Project_TeamB
+{
+    class ViewerData
+    {
+        private static string Cnnection_Str;
+        private static MySqlConnection oCnn = null;
+        //private static MySqlDataAdapter oAdt= null;
+        //private static MySqlCommand oCmd = null;
+        private static DataSet DataSet_TreeView = null;
+        private static DataRow DataRow_TreeView = null;
+
+        private static DataSet DS_tree = null;
+        private static DataRow DR_tree = null;
+
+        private static DataSet DS_notice = null;
+        private static DataRow DR_notice = null;
+
+        public static int InitMySql(string database, string userid, string pwd)
+        {
+            Cnnection_Str = string.Format("data source = 210.115.163.125; database = {0}; user id={1}; password = {2}"
+                , database, userid, pwd);
+            try
+            {
+                //접속 부분
+                oCnn = new MySqlConnection(Cnnection_Str);
+                oCnn.Open();
+                Console.WriteLine("접속");
+                return 0;
+            }
+            catch (MySqlException _e)
+            {
+                Console.WriteLine(_e.Message);
+                return 1;
+            }
+        }
+        public static void treeList_reader(String query)
+        {
+            try
+            {
+                DS_tree = MySqlHelper.ExecuteDataset(oCnn, query);
+                if(DS_tree.Tables[0].Rows.Count != 0)
+                    DR_tree = DS_tree.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static int getNodeCount()
+        {
+            return DS_tree.Tables[0].Rows.Count;
+        }
+        public static string getNodeName(int i)
+        {
+            DR_tree = DS_tree.Tables[0].Rows[i];
+
+            return DR_tree["name"].ToString();
+        }
+
+        public static void notice_reader(String query)
+        {
+            try
+            {
+                DS_notice = MySqlHelper.ExecuteDataset(oCnn, query);
+                DR_notice = DS_notice.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static string getLastNotice()
+        {
+            DR_notice = DS_notice.Tables[0].Rows[DS_notice.Tables[0].Rows.Count - 1];
+
+            return DR_notice["content"].ToString();
+        }
+        //나중에 트리뷰가 추가되면 해당 트리뷰의 이름을 받아서 selct문을 실행 할 수 있도록 한다.
+        public static void Synb_reader(String query)
+        {
+            try
+            {
+                DataSet_TreeView = MySqlHelper.ExecuteDataset(oCnn, query);
+                DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+               // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static int Synb_View_getCount()
+        {
+            return DataSet_TreeView.Tables[0].Rows.Count;
+        }
+        public static string Synb_View_getStart(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            
+            return DataRow_TreeView["START"].ToString();
+        }
+        public static string Synb_View_getEnd(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            
+            return DataRow_TreeView["END"].ToString();
+        }
+        public static string Synb_View_getLocus(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["LOCUS_TAG"].ToString();
+        }
+        public static string Synb_View_getID(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["IS_Synb"].ToString();
+        }
+        public static string Synb_View_getProduct(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["PRODUCT"].ToString();
+        }
+        public static string Synb_View_getType(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["FEATURE_TYPE"].ToString();
+        }
+        public static string Synb_View_getNA(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["NA_LENGTH"].ToString();
+        }
+        public static string Synb_View_getSTRAND(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["STRAND"].ToString();
+        }
+        public static string Synb_View_getTERM(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["GENE_TERM"].ToString();
+        }
+        public static string Synb_View_getDEG(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["IS_DEG"].ToString();
+        }
+        public static string Synb_View_getEG(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["IS_EG"].ToString();
+        }
+        public static string Synb_View_getCog(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["COG"].ToString();
+        }
+        public static string Synb_View_getSec(int i)
+        {
+            DataRow_TreeView = DataSet_TreeView.Tables[0].Rows[i];
+            return DataRow_TreeView["Sequence"].ToString();
+        }
+    }
+}

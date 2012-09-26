@@ -1,0 +1,79 @@
+﻿using System;
+
+namespace Synb_Project_TeamB
+{
+    public class InsertedEG
+    {
+        public String[] eg;
+        public String[] freq;
+        public String[] go_term;
+        public String[] product;
+        public String[] cog;
+        public String[] Strand;
+        public String Block_Name;
+
+        public int cnt;
+
+        public InsertedEG()
+        {
+            eg = new String[478];
+            freq = new String[478];
+            go_term = new String[478];
+            product = new String[478];
+            cog = new String[478];
+            Strand = new String[478];
+            cnt = 0;
+        }
+
+        public void insertEG(String s, String f, String g, String p, String c, String q)
+        {
+            eg[cnt] = s;
+            freq[cnt] = f;
+            go_term[cnt] = g;
+            product[cnt] = p;
+            cog[cnt] = c;
+            Strand[cnt++] = q;
+        }
+
+        public void deleteEG(String synb_uid)
+        {
+            //String temp;
+            bool flag = false;
+
+            for (int i = 0; i < cnt; i++)
+            {
+                if (flag)
+                {
+                    eg[i - 1] = eg[i];
+                    freq[i - 1] = freq[i];
+                    go_term[i - 1] = go_term[i];
+                    product[i - 1] = product[i];
+                    cog[i - 1] = cog[i];
+                }
+                if (eg[i].Equals(synb_uid))
+                    flag = true;
+            }
+            cnt--;
+        }
+
+        public bool isThereEG(String synb_uid)
+        {
+            for (int i = 0; i < cnt; i++)
+            {
+                if (eg[i].Equals(synb_uid))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public String getEG(int count)
+        {
+            Console.WriteLine(eg[count]);
+            return eg[count];
+        }
+
+
+    }
+
+}

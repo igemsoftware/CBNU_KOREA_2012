@@ -1,0 +1,736 @@
+﻿namespace Synb_Project_TeamB
+{
+    partial class Designer
+    {
+        /// <summary>
+        /// 필수 디자이너 변수입니다.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// 사용 중인 모든 리소스를 정리합니다.
+        /// </summary>
+        /// <param name="disposing">관리되는 리소스를 삭제해야 하면 true이고, 그렇지 않으면 false입니다.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form 디자이너에서 생성한 코드
+
+        /// <summary>
+        /// 디자이너 지원에 필요한 메서드입니다.
+        /// 이 메서드의 내용을 코드 편집기로 수정하지 마십시오.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.GBlist = new System.Windows.Forms.GroupBox();
+            this.TBsection = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.DGVcog = new System.Windows.Forms.DataGridView();
+            this._CLC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLD = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLH = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLI = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLJ = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLK = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLL = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLO = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLP = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLR = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLS = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLT = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLU = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._CLETC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BTsearch = new System.Windows.Forms.Button();
+            this.TBsearch = new System.Windows.Forms.TextBox();
+            this.CBsearch = new System.Windows.Forms.ComboBox();
+            this.DGVlist = new System.Windows.Forms.DataGridView();
+            this.LBsecCurEG = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.LBsecTotalEG = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.PBsecDesign = new System.Windows.Forms.ProgressBar();
+            this.PBdesign = new System.Windows.Forms.ProgressBar();
+            this.LBtotalEG = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.LBcurrEG = new System.Windows.Forms.Label();
+            this.GBcircle = new System.Windows.Forms.GroupBox();
+            this.PieBox = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.BTdesign = new System.Windows.Forms.Button();
+            this.BTinsert = new System.Windows.Forms.Button();
+            this.CLcheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.CLsynb_uid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CLfreq = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CLGOTerm = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CLproduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CLCOG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.STRAND = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GBlist.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DGVcog)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DGVlist)).BeginInit();
+            this.GBcircle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PieBox)).BeginInit();
+            this.menuStrip1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // GBlist
+            // 
+            this.GBlist.Controls.Add(this.TBsection);
+            this.GBlist.Controls.Add(this.pictureBox1);
+            this.GBlist.Controls.Add(this.label8);
+            this.GBlist.Controls.Add(this.DGVcog);
+            this.GBlist.Controls.Add(this.BTsearch);
+            this.GBlist.Controls.Add(this.TBsearch);
+            this.GBlist.Controls.Add(this.CBsearch);
+            this.GBlist.Controls.Add(this.DGVlist);
+            this.GBlist.Location = new System.Drawing.Point(620, 28);
+            this.GBlist.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GBlist.Name = "GBlist";
+            this.GBlist.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GBlist.Size = new System.Drawing.Size(507, 639);
+            this.GBlist.TabIndex = 9;
+            this.GBlist.TabStop = false;
+            // 
+            // TBsection
+            // 
+            this.TBsection.Enabled = false;
+            this.TBsection.Location = new System.Drawing.Point(6, 21);
+            this.TBsection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TBsection.Name = "TBsection";
+            this.TBsection.Size = new System.Drawing.Size(64, 23);
+            this.TBsection.TabIndex = 7;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::Synb_Project_TeamB.Properties.Resources.chart_column_2;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox1.Location = new System.Drawing.Point(6, 542);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(28, 20);
+            this.pictureBox1.TabIndex = 17;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(31, 547);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(90, 15);
+            this.label8.TabIndex = 16;
+            this.label8.Text = "COG Frequency";
+            // 
+            // DGVcog
+            // 
+            this.DGVcog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGVcog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this._CLC,
+            this._CLD,
+            this._CLE,
+            this._CLF,
+            this._CLG,
+            this._CLH,
+            this._CLI,
+            this._CLJ,
+            this._CLK,
+            this._CLL,
+            this._CLM,
+            this._CLO,
+            this._CLP,
+            this._CLR,
+            this._CLS,
+            this._CLT,
+            this._CLU,
+            this._CLV,
+            this._CLETC});
+            this.DGVcog.Location = new System.Drawing.Point(6, 567);
+            this.DGVcog.Name = "DGVcog";
+            this.DGVcog.RowHeadersVisible = false;
+            this.DGVcog.RowTemplate.Height = 23;
+            this.DGVcog.Size = new System.Drawing.Size(520, 60);
+            this.DGVcog.TabIndex = 15;
+            // 
+            // _CLC
+            // 
+            this._CLC.HeaderText = "C";
+            this._CLC.Name = "_CLC";
+            this._CLC.Width = 30;
+            // 
+            // _CLD
+            // 
+            this._CLD.HeaderText = "D";
+            this._CLD.Name = "_CLD";
+            this._CLD.Width = 30;
+            // 
+            // _CLE
+            // 
+            this._CLE.HeaderText = "E";
+            this._CLE.Name = "_CLE";
+            this._CLE.Width = 30;
+            // 
+            // _CLF
+            // 
+            this._CLF.HeaderText = "F";
+            this._CLF.Name = "_CLF";
+            this._CLF.Width = 30;
+            // 
+            // _CLG
+            // 
+            this._CLG.HeaderText = "G";
+            this._CLG.Name = "_CLG";
+            this._CLG.Width = 30;
+            // 
+            // _CLH
+            // 
+            this._CLH.HeaderText = "H";
+            this._CLH.Name = "_CLH";
+            this._CLH.Width = 30;
+            // 
+            // _CLI
+            // 
+            this._CLI.HeaderText = "I";
+            this._CLI.Name = "_CLI";
+            this._CLI.Width = 30;
+            // 
+            // _CLJ
+            // 
+            this._CLJ.HeaderText = "J";
+            this._CLJ.Name = "_CLJ";
+            this._CLJ.Width = 30;
+            // 
+            // _CLK
+            // 
+            this._CLK.HeaderText = "K";
+            this._CLK.Name = "_CLK";
+            this._CLK.Width = 30;
+            // 
+            // _CLL
+            // 
+            this._CLL.HeaderText = "L";
+            this._CLL.Name = "_CLL";
+            this._CLL.Width = 30;
+            // 
+            // _CLM
+            // 
+            this._CLM.HeaderText = "M";
+            this._CLM.Name = "_CLM";
+            this._CLM.Width = 30;
+            // 
+            // _CLO
+            // 
+            this._CLO.HeaderText = "O";
+            this._CLO.Name = "_CLO";
+            this._CLO.Width = 30;
+            // 
+            // _CLP
+            // 
+            this._CLP.HeaderText = "P";
+            this._CLP.Name = "_CLP";
+            this._CLP.Width = 30;
+            // 
+            // _CLR
+            // 
+            this._CLR.HeaderText = "R";
+            this._CLR.Name = "_CLR";
+            this._CLR.Width = 30;
+            // 
+            // _CLS
+            // 
+            this._CLS.HeaderText = "S";
+            this._CLS.Name = "_CLS";
+            this._CLS.Width = 30;
+            // 
+            // _CLT
+            // 
+            this._CLT.HeaderText = "T";
+            this._CLT.Name = "_CLT";
+            this._CLT.Width = 30;
+            // 
+            // _CLU
+            // 
+            this._CLU.HeaderText = "U";
+            this._CLU.Name = "_CLU";
+            this._CLU.Width = 30;
+            // 
+            // _CLV
+            // 
+            this._CLV.HeaderText = "V";
+            this._CLV.Name = "_CLV";
+            this._CLV.Width = 30;
+            // 
+            // _CLETC
+            // 
+            this._CLETC.HeaderText = "etc";
+            this._CLETC.Name = "_CLETC";
+            this._CLETC.Width = 30;
+            // 
+            // BTsearch
+            // 
+            this.BTsearch.BackgroundImage = global::Synb_Project_TeamB.Properties.Resources.understanding;
+            this.BTsearch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BTsearch.FlatAppearance.BorderSize = 0;
+            this.BTsearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BTsearch.Location = new System.Drawing.Point(470, 17);
+            this.BTsearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.BTsearch.Name = "BTsearch";
+            this.BTsearch.Size = new System.Drawing.Size(34, 26);
+            this.BTsearch.TabIndex = 3;
+            this.BTsearch.UseVisualStyleBackColor = true;
+            this.BTsearch.Click += new System.EventHandler(this.BTsearch_Click);
+            // 
+            // TBsearch
+            // 
+            this.TBsearch.Location = new System.Drawing.Point(171, 20);
+            this.TBsearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TBsearch.Name = "TBsearch";
+            this.TBsearch.Size = new System.Drawing.Size(293, 23);
+            this.TBsearch.TabIndex = 2;
+            this.TBsearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TBsearch_KeyDown);
+            // 
+            // CBsearch
+            // 
+            this.CBsearch.FormattingEnabled = true;
+            this.CBsearch.Items.AddRange(new object[] {
+            "Synb UID",
+            "GO Term",
+            "Product",
+            "COG"});
+            this.CBsearch.Location = new System.Drawing.Point(76, 21);
+            this.CBsearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.CBsearch.Name = "CBsearch";
+            this.CBsearch.Size = new System.Drawing.Size(89, 23);
+            this.CBsearch.TabIndex = 1;
+            this.CBsearch.Text = "Synb UID";
+            // 
+            // DGVlist
+            // 
+            this.DGVlist.AllowUserToAddRows = false;
+            this.DGVlist.AllowUserToDeleteRows = false;
+            this.DGVlist.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.DGVlist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGVlist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CLcheck,
+            this.CLsynb_uid,
+            this.CLfreq,
+            this.CLGOTerm,
+            this.CLproduct,
+            this.CLCOG,
+            this.STRAND});
+            this.DGVlist.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.DGVlist.Location = new System.Drawing.Point(6, 51);
+            this.DGVlist.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DGVlist.MultiSelect = false;
+            this.DGVlist.Name = "DGVlist";
+            this.DGVlist.RowHeadersVisible = false;
+            this.DGVlist.RowHeadersWidth = 26;
+            this.DGVlist.RowTemplate.Height = 23;
+            this.DGVlist.Size = new System.Drawing.Size(495, 484);
+            this.DGVlist.TabIndex = 0;
+            this.DGVlist.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVlist_CellContentClick);
+            this.DGVlist.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DGVlist_CellPainting);
+            // 
+            // LBsecCurEG
+            // 
+            this.LBsecCurEG.AutoSize = true;
+            this.LBsecCurEG.Location = new System.Drawing.Point(378, 619);
+            this.LBsecCurEG.Name = "LBsecCurEG";
+            this.LBsecCurEG.Size = new System.Drawing.Size(25, 15);
+            this.LBsecCurEG.TabIndex = 13;
+            this.LBsecCurEG.Text = "120";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(409, 619);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(12, 15);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "/";
+            // 
+            // LBsecTotalEG
+            // 
+            this.LBsecTotalEG.AutoSize = true;
+            this.LBsecTotalEG.Location = new System.Drawing.Point(427, 619);
+            this.LBsecTotalEG.Name = "LBsecTotalEG";
+            this.LBsecTotalEG.Size = new System.Drawing.Size(25, 15);
+            this.LBsecTotalEG.TabIndex = 11;
+            this.LBsecTotalEG.Text = "478";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(458, 619);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(21, 15);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "EG";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 619);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(94, 15);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Section Progress";
+            // 
+            // PBsecDesign
+            // 
+            this.PBsecDesign.Location = new System.Drawing.Point(15, 637);
+            this.PBsecDesign.Name = "PBsecDesign";
+            this.PBsecDesign.Size = new System.Drawing.Size(464, 19);
+            this.PBsecDesign.TabIndex = 8;
+            this.PBsecDesign.Click += new System.EventHandler(this.PBsecDesign_Click);
+            // 
+            // PBdesign
+            // 
+            this.PBdesign.Location = new System.Drawing.Point(15, 595);
+            this.PBdesign.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.PBdesign.Maximum = 478;
+            this.PBdesign.Name = "PBdesign";
+            this.PBdesign.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.PBdesign.Size = new System.Drawing.Size(466, 20);
+            this.PBdesign.TabIndex = 0;
+            this.PBdesign.Click += new System.EventHandler(this.PBdesign_Click);
+            // 
+            // LBtotalEG
+            // 
+            this.LBtotalEG.AutoSize = true;
+            this.LBtotalEG.Location = new System.Drawing.Point(432, 576);
+            this.LBtotalEG.Name = "LBtotalEG";
+            this.LBtotalEG.Size = new System.Drawing.Size(25, 15);
+            this.LBtotalEG.TabIndex = 11;
+            this.LBtotalEG.Text = "478";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(414, 576);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(12, 15);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "/";
+            // 
+            // LBcurrEG
+            // 
+            this.LBcurrEG.AutoSize = true;
+            this.LBcurrEG.Location = new System.Drawing.Point(383, 576);
+            this.LBcurrEG.Name = "LBcurrEG";
+            this.LBcurrEG.Size = new System.Drawing.Size(13, 15);
+            this.LBcurrEG.TabIndex = 13;
+            this.LBcurrEG.Text = "0";
+            // 
+            // GBcircle
+            // 
+            this.GBcircle.Controls.Add(this.PieBox);
+            this.GBcircle.Location = new System.Drawing.Point(12, 28);
+            this.GBcircle.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GBcircle.Name = "GBcircle";
+            this.GBcircle.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GBcircle.Size = new System.Drawing.Size(568, 540);
+            this.GBcircle.TabIndex = 10;
+            this.GBcircle.TabStop = false;
+            // 
+            // PieBox
+            // 
+            this.PieBox.BackColor = System.Drawing.Color.White;
+            this.PieBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PieBox.Location = new System.Drawing.Point(3, 20);
+            this.PieBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.PieBox.Name = "PieBox";
+            this.PieBox.Size = new System.Drawing.Size(562, 516);
+            this.PieBox.TabIndex = 0;
+            this.PieBox.TabStop = false;
+            this.PieBox.Click += new System.EventHandler(this.PieBox_Click);
+            this.PieBox.Paint += new System.Windows.Forms.PaintEventHandler(this.PieBox_Paint);
+            this.PieBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PieBox_MouseMove);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(458, 576);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(21, 15);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "EG";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(12, 576);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 15);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Total Progress";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1138, 25);
+            this.menuStrip1.TabIndex = 18;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menuToolStripMenuItem
+            // 
+            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.loadToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI Symbol", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuToolStripMenuItem.Image = global::Synb_Project_TeamB.Properties.Resources.menu;
+            this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
+            this.menuToolStripMenuItem.Size = new System.Drawing.Size(69, 21);
+            this.menuToolStripMenuItem.Text = "Menu";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem1,
+            this.saveAsToolStripMenuItem});
+            this.saveToolStripMenuItem.Image = global::Synb_Project_TeamB.Properties.Resources.disk;
+            this.saveToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(121, 38);
+            this.saveToolStripMenuItem.Text = "Save";
+            // 
+            // saveToolStripMenuItem1
+            // 
+            this.saveToolStripMenuItem1.Image = global::Synb_Project_TeamB.Properties.Resources.disk;
+            this.saveToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(137, 38);
+            this.saveToolStripMenuItem1.Text = "Save";
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Image = global::Synb_Project_TeamB.Properties.Resources.save_as;
+            this.saveAsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(137, 38);
+            this.saveAsToolStripMenuItem.Text = "Save As";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // loadToolStripMenuItem
+            // 
+            this.loadToolStripMenuItem.Image = global::Synb_Project_TeamB.Properties.Resources.folder;
+            this.loadToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(121, 38);
+            this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
+            this.helpToolStripMenuItem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.helpToolStripMenuItem.Image = global::Synb_Project_TeamB.Properties.Resources.help;
+            this.helpToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(121, 38);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // BTdesign
+            // 
+            this.BTdesign.Image = global::Synb_Project_TeamB.Properties.Resources.flood_it;
+            this.BTdesign.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.BTdesign.Location = new System.Drawing.Point(486, 570);
+            this.BTdesign.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.BTdesign.Name = "BTdesign";
+            this.BTdesign.Size = new System.Drawing.Size(129, 86);
+            this.BTdesign.TabIndex = 15;
+            this.BTdesign.Text = "        Done Design!";
+            this.BTdesign.UseVisualStyleBackColor = true;
+            this.BTdesign.Click += new System.EventHandler(this.BTdesign_Click);
+            // 
+            // BTinsert
+            // 
+            this.BTinsert.BackgroundImage = global::Synb_Project_TeamB.Properties.Resources.resultset_previous;
+            this.BTinsert.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BTinsert.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTinsert.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BTinsert.Location = new System.Drawing.Point(585, 37);
+            this.BTinsert.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.BTinsert.Name = "BTinsert";
+            this.BTinsert.Size = new System.Drawing.Size(30, 527);
+            this.BTinsert.TabIndex = 14;
+            this.BTinsert.UseVisualStyleBackColor = false;
+            this.BTinsert.Click += new System.EventHandler(this.BTinsert_Click);
+            // 
+            // CLcheck
+            // 
+            this.CLcheck.HeaderText = "";
+            this.CLcheck.Name = "CLcheck";
+            this.CLcheck.Width = 30;
+            // 
+            // CLsynb_uid
+            // 
+            this.CLsynb_uid.HeaderText = "Synb UID";
+            this.CLsynb_uid.Name = "CLsynb_uid";
+            this.CLsynb_uid.Width = 90;
+            // 
+            // CLfreq
+            // 
+            this.CLfreq.HeaderText = "Freq(%)";
+            this.CLfreq.Name = "CLfreq";
+            this.CLfreq.Width = 60;
+            // 
+            // CLGOTerm
+            // 
+            this.CLGOTerm.HeaderText = "GO Term";
+            this.CLGOTerm.Name = "CLGOTerm";
+            this.CLGOTerm.Width = 130;
+            // 
+            // CLproduct
+            // 
+            this.CLproduct.HeaderText = "Product";
+            this.CLproduct.Name = "CLproduct";
+            this.CLproduct.Width = 140;
+            // 
+            // CLCOG
+            // 
+            this.CLCOG.HeaderText = "COG";
+            this.CLCOG.Name = "CLCOG";
+            this.CLCOG.Width = 40;
+            // 
+            // STRAND
+            // 
+            this.STRAND.HeaderText = "STRAND";
+            this.STRAND.Name = "STRAND";
+            this.STRAND.Visible = false;
+            this.STRAND.Width = 60;
+            // 
+            // Designer
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1138, 676);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.BTdesign);
+            this.Controls.Add(this.BTinsert);
+            this.Controls.Add(this.LBcurrEG);
+            this.Controls.Add(this.LBsecCurEG);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LBsecTotalEG);
+            this.Controls.Add(this.LBtotalEG);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.PBdesign);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.GBcircle);
+            this.Controls.Add(this.PBsecDesign);
+            this.Controls.Add(this.GBlist);
+            this.Controls.Add(this.menuStrip1);
+            this.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MaximizeBox = false;
+            this.Name = "Designer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Designer";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.onDesignerClose);
+            this.Load += new System.EventHandler(this.Designer_Load);
+            this.GBlist.ResumeLayout(false);
+            this.GBlist.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DGVcog)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DGVlist)).EndInit();
+            this.GBcircle.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PieBox)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.GroupBox GBlist;
+        private System.Windows.Forms.GroupBox GBcircle;
+        private System.Windows.Forms.Button BTsearch;
+        private System.Windows.Forms.TextBox TBsearch;
+        private System.Windows.Forms.ComboBox CBsearch;
+        private System.Windows.Forms.Label LBtotalEG;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox PieBox;
+        private System.Windows.Forms.Button BTinsert;
+        private System.Windows.Forms.DataGridView DGVlist;
+        private System.Windows.Forms.TextBox TBsection;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label LBsecTotalEG;
+        private System.Windows.Forms.Label label7;
+        public System.Windows.Forms.ProgressBar PBdesign;
+        public System.Windows.Forms.ProgressBar PBsecDesign;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        public System.Windows.Forms.Button BTdesign;
+        private System.Windows.Forms.DataGridView DGVcog;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLC;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLD;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLG;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLH;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLI;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLJ;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLK;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLL;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLO;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLP;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLR;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLS;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLT;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLU;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLV;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _CLETC;
+        public System.Windows.Forms.Label LBcurrEG;
+        public System.Windows.Forms.Label LBsecCurEG;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn CLcheck;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CLsynb_uid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CLfreq;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CLGOTerm;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CLproduct;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CLCOG;
+        private System.Windows.Forms.DataGridViewTextBoxColumn STRAND;
+    }
+}
+

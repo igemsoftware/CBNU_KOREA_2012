@@ -1,0 +1,83 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+using System.Collections;
+using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+
+namespace Synb_Project_TeamB
+{
+    class Graphical_synb
+    {
+        Viewer _Viewer;
+        public Graphical_synb(Viewer m_Viewer)
+        {
+            _Viewer = m_Viewer;
+        }
+        private int zoomSize;
+        private int startPoint;
+        private int endPoint;
+        private int length;
+        private Random Color_Random;
+        List<Color> Color_List;
+        Rectangle[] Linear_Block;
+        private int getCount;
+        private void Linear_init(string query)
+        {
+            //신비 테이블 접속
+            ViewerData.Synb_reader(query);
+            zoomSize = 200;
+            startPoint = 0;
+            endPoint = 0;
+            Color_Random = new Random();
+            Color_List = new List<Color>();
+            getCount = ViewerData.Synb_View_getCount();
+            Linear_Block = new Rectangle[getCount];
+            for (int i = 0; i < getCount; i++)
+            {
+                startPoint = Convert.ToInt32(ViewerData.Synb_View_getStart(i));
+                endPoint = Convert.ToInt32(ViewerData.Synb_View_getEnd(i));
+                length = endPoint - startPoint;
+
+                Linear_Block[i] = new Rectangle(
+                    (startPoint / zoomSize), 50, length/zoomSize, 50);
+
+                Color_List.Add(
+                    Color.FromArgb(Color_Random.Next(256), Color_Random.Next(256), Color_Random.Next(25)));
+
+            }
+            Console.WriteLine(startPoint / zoomSize);
+            
+        }
+
+        
+       
+
+        //선형 을 그리는 함수
+        public void LinearBrowserComponent(/*object sender, PaintEventArgs e*/string query, Graphics g)
+        {
+            //Graphics g = e.Graphics;
+            this.Linear_init(query);
+            g.Clear(Color.WhiteSmoke);
+            for (int i = 0; i < Linear_Block.Length; i++)
+            {
+                SolidBrush MyBrush = new SolidBrush(Color.FromArgb(Color_Random.Next(256), Color_Random.Next(256), Color_Random.Next(256)));
+                g.FillRectangle(MyBrush, Linear_Block[i]);
+            }
+
+        }
+        //원형을 그리는 함수
+        public void CircularBrowserComponent(string Table_Name)
+        {
+
+
+
+        }
+
+
+
+
+    }
+}

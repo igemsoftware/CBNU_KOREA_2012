@@ -1,0 +1,236 @@
+﻿using System;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using MySql.Data.MySqlClient;
+using System.Data;
+
+namespace Synb_Project_TeamB
+{
+    class DesignerData
+    {
+        public static int cnt;
+        public static int totalCnt;
+
+        private static string conn_str;
+        private static MySqlConnection conn = null;
+        
+        private static DataSet DSlistOfEG = null;
+        private static DataRow DRlistOfEG = null;
+
+        public static int DBConnector()
+        {
+            String ipaddress = "210.115.163.125";
+            String dbname = "Synb_View";
+            String userid = "root";
+            String pwd = "1234";
+
+            conn_str = string.Format("data source = {0}; database = {1}; user id={2}; password = {3}"
+                ,ipaddress, dbname, userid, pwd);
+            try
+            {
+                conn = new MySqlConnection(conn_str);
+                conn.Open();   
+                return 0;
+            }
+            catch (MySqlException _e)
+            {
+                Console.WriteLine(_e.Message);
+                return 1;
+            }
+        }
+
+        public static void selectEGList()
+        {
+
+            String query = "SELECT * FROM EGDesignTable";
+
+            Console.WriteLine(query);
+
+            try
+            {
+                DSlistOfEG = MySqlHelper.ExecuteDataset(conn, query);
+                getEG_Count();
+                totalCnt = cnt;
+                if (cnt == 0)
+                {
+                    Console.WriteLine("$");
+                    return;
+                }
+                DRlistOfEG = DSlistOfEG.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+
+            getEG_Count();
+        }
+
+        public static void selectEGList(int indexOfCircle)
+        {
+            char index = (char)('A' + indexOfCircle);
+
+            String query = "SELECT * FROM EGDesignTable WHERE " + index + "<>'0'";
+
+            Console.WriteLine(query);
+
+            try
+            {
+                DSlistOfEG = MySqlHelper.ExecuteDataset(conn, query);
+                getEG_Count();
+                if (cnt == 0)
+                {
+                    Console.WriteLine("$");
+                    return;
+                }
+                DRlistOfEG = DSlistOfEG.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+
+            getEG_Count();
+        }
+
+        public static void selectEGList_synb_uid(int indexOfCircle, String synb_uid)
+        {
+            char index = (char)('A' + indexOfCircle);
+
+            String query = "SELECT * FROM EGDesignTable WHERE " + index + "<>'0' AND synb_uid like'%" + synb_uid + "%'";
+
+            try
+            {
+                DSlistOfEG = MySqlHelper.ExecuteDataset(conn, query);
+                getEG_Count();
+                if (cnt == 0)
+                {
+                    Console.WriteLine("$");
+                    return;
+                }
+                DRlistOfEG = DSlistOfEG.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static void selectEGList_GOTerm(int indexOfCircle, String GOTerm)
+        {
+            char index = (char)('A' + indexOfCircle);
+
+            String query = "SELECT * FROM EGDesignTable WHERE " + index + "<>'0' AND GO_Term like'%" + GOTerm + "%'";
+
+            try
+            {
+                DSlistOfEG = MySqlHelper.ExecuteDataset(conn, query);
+                getEG_Count();
+                if (cnt == 0)
+                {
+                    Console.WriteLine("$");
+                    return;
+                }
+                DRlistOfEG = DSlistOfEG.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static void selectEGList_Product(int indexOfCircle, String Product)
+        {
+            char index = (char)('A' + indexOfCircle);
+
+            String query = "SELECT * FROM EGDesignTable WHERE " + index + "<>'0' AND Product like'%" + Product + "%'";
+
+            try
+            {
+                DSlistOfEG = MySqlHelper.ExecuteDataset(conn, query);
+                getEG_Count();
+                if (cnt == 0)
+                {
+                    Console.WriteLine("$");
+                    return;
+                }
+                DRlistOfEG = DSlistOfEG.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static void selectEGList_COG(int indexOfCircle, String COG)
+        {
+            char index = (char)('A' + indexOfCircle);
+
+            String query = "SELECT * FROM EGDesignTable WHERE " + index + "<>'0' AND COG like'%" + COG + "%'";
+
+            try
+            {
+                DSlistOfEG = MySqlHelper.ExecuteDataset(conn, query);
+                getEG_Count();
+                if (cnt == 0)
+                {
+                    Console.WriteLine("$");
+                    return;
+                }
+                DRlistOfEG = DSlistOfEG.Tables[0].Rows[0];
+            }
+            catch (MySqlException e)
+            {
+                // MessageBox.Show("DB Connection Error. Try again.");
+            }
+        }
+
+        public static void getEG_Count()
+        {
+            cnt = DSlistOfEG.Tables[0].Rows.Count;
+            //MessageBox.Show(cnt + "");
+        }
+
+        public static string getEG_UID(int index)
+        {
+            DRlistOfEG = DSlistOfEG.Tables[0].Rows[index];
+
+            return DRlistOfEG["synb_uid"].ToString();
+        }
+        public static int[] getEG_Freq(int index)
+        {
+            DRlistOfEG = DSlistOfEG.Tables[0].Rows[index];
+
+            int[] getEG_Freq = new int[20];
+
+            char column = 'A';
+
+            for (int i = 0; i < 20; i++)
+            {
+                getEG_Freq[i] = int.Parse( DRlistOfEG[((char)(column + i)).ToString()].ToString() );
+            }
+
+            return getEG_Freq;
+        }
+        public static string getEG_GOTerm(int index)
+        {
+            DRlistOfEG = DSlistOfEG.Tables[0].Rows[index];
+
+            return DRlistOfEG["GO_Term"].ToString();
+        }
+        public static string getEG_Product(int index)
+        {
+            DRlistOfEG = DSlistOfEG.Tables[0].Rows[index];
+
+            return DRlistOfEG["Product"].ToString();
+        }
+        public static string getEG_COG(int index)
+        {
+            DRlistOfEG = DSlistOfEG.Tables[0].Rows[index];
+
+            return DRlistOfEG["COG"].ToString();
+        }
+    }
+}

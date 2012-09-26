@@ -1,0 +1,121 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Windows;
+
+namespace Synb_Project_TeamB
+{
+    public partial class TransControl : Control
+    {
+
+        Viewer _viewer = null;
+        private Point mCurrentPosition = new Point(0, 0);
+        private double HoGil;
+        private double Ban;
+        private Point centerOfCircle;
+        private Point LocationPoint;
+        public TransControl(Viewer vieser)
+        {
+            InitializeComponent();
+            InitializeUi();
+            _viewer = vieser;
+        }
+
+        void InitializeUi()
+        {
+            base.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor
+                                   | ControlStyles.UserPaint, true);//중요합니다.
+            base.SetStyle(ControlStyles.Selectable | ControlStyles.FixedHeight, false);
+            base.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.TabStop = false;
+            this.BackColor = Color.Transparent;//중요합니다.
+        }
+
+        //두 점 사이의 각도를 구해 호의 길이를 계산
+        private double getAngle(double x_lon, double x_lat, double y_lon, double y_lat)
+        {
+            // KSG ADD 20070730 x를 기준으로 y의 방향을 구한다.
+            double meter_lon;
+            double meter_lat;
+            double heading;
+            meter_lon = 0;
+            meter_lat = 0;
+            meter_lon = y_lon - x_lon;
+            meter_lat = y_lat - x_lat;
+            heading = Math.Abs(Math.Atan(meter_lon / meter_lat) * (180 / Math.PI) + 0.5); // 반올림
+            if (meter_lat <= 0 && meter_lon >= 0)
+            {
+                heading = 180 - heading;
+            }
+            else if (meter_lat <= 0 && meter_lon <= 0)
+            {
+                heading = 180 + heading;
+            }
+            else if (meter_lat > 0 && meter_lon <= 0)
+            {
+                heading = 360 - heading;
+            }
+            return heading;
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs pevent)//중요합니다.
+        {
+            base.OnPaintBackground(pevent);
+        }
+
+        /// <summary>
+        /// 여긴 그냥 그림 그리기일뿐입니다.
+        /// </summary>
+        /// <param name="pe"></param>
+        protected override void OnPaint(PaintEventArgs pe)
+        {
+            Graphics g = pe.Graphics;
+            g.SmoothingMode = SmoothingMode.HighSpeed;
+            //Frame
+            g.DrawImage(Properties.Resources.magnifier, 0, 0, Height - 2, Height - 2);
+        }
+
+        private void TransControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                //마우스 버튼 눌렀을 때의 커서위치
+                
+                mCurrentPosition = new Point(-e.X, -e.Y);
+            }
+        }
+
+
+        /*마우스 이동 시 위치값을 추척하여 원점의서의 각도를 계산
+         * 반지름과 각도의 라디안 값을 이용하여 현재 위치를 계산한다.
+         * 
+         */
+        private void TransControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                centerOfCircle =  new Point((int)(this.Parent.Width / 2 * 0.915), (int)(this.Parent.Height / 2 + 39));
+                Point currentlocatio = new Point(this.Location.X + (mCurrentPosition.X + e.X), this.Location.Y + (mCurrentPosition.Y + e.Y));
+
+                double Radian = getAngle(centerOfCircle.X, centerOfCircle.Y, currentlocatio.X, this.Parent.Height - currentlocatio.Y) * (Math.PI / 180);
+                    LocationPoint = new Point((int)(centerOfCircle.X + (((this.Parent.Width / 2) * 0.65) * Math.Cos(Radian + 4.7))) ,
+                        (int)(this.Parent.Height - centerOfCircle.Y + (((this.Parent.Width / 2) * 0.65) * Math.Sin(Radian + 4.7))) + 10);
+                this.Location = new Point(LocationPoint.X , LocationPoint.Y);
+
+                Ban = (this.Parent.Width / 2) * 0.60;
+                HoGil = getAngle(centerOfCircle.X, centerOfCircle.Y, currentlocatio.X, this.Parent.Height - currentlocatio.Y)
+                    / 360 * Ban * 2 * Math.PI;
+                
+                double Bungi = Ban * 2 * Math.PI;
+                _viewer.PanelControl(HoGil, Bungi);
+            }
+        }
+
+    }
+}
