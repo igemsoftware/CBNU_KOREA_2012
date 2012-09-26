@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:so="http://purl.obolibrary.org/obo/" xmlns="http://sbols.org/v1#">
+	<DnaComponent rdf:about="http://partsregistry.org/Part:BBa_K371052">
+		<displayId>BBa_K371052</displayId>
+		<name>K371052</name>
+		<description>RFC 53 easy expression biobrick</description>
+		<dnaSequence>
+			<DnaSequence rdf:about="NEEDED">
+				<nucleotides>caatacgcaaaccgcctctccccgcgcgttggccgattcattaatgcagctggcacgacaggtttcccgactggaaagcgggcagtgagcgcaacgcaattaatgtgagttagctcactcattaggcaccccaggctttacactttatgcttccggctcgtatgttgtgtggaattgtgagcggataacaatttcacacatactagagaaagaggagaaatactagatgtgaagagcgctagcgctcttcaggttaataacgctgatagtgctagtgtagatcgctactagagccaggcatcaaataaaacgaaaggctcagtcgaaagactgggcctttcgttttatctgttgtttgtcggtgaacgctctctactagagtcacactggctcaccttcgggtgggcctttctgcgtttata</nucleotides>
+			</DnaSequence>
+		</dnaSequence>
+	</DnaComponent>
+	<DnaComponent rdf:about="http://partsregistry.org/Part:BBa_R0010">
+		<displayId>BBa_R0010</displayId>
+		<name>R0010</name>
+		<description>promoter (lacI regulated)</description>
+	</DnaComponent>
+	<DnaComponent rdf:about="http://partsregistry.org/Part:BBa_B0034">
+		<displayId>BBa_B0034</displayId>
+		<name>B0034</name>
+		<description>RBS (Elowitz 1999) -- defines RBS efficiency</description>
+	</DnaComponent>
+	<DnaComponent rdf:about="http://partsregistry.org/Part:BBa_K371045">
+		<displayId>BBa_K371045</displayId>
+		<name>K371045</name>
+		<description>ATG-MSF-NheI-MPF-GGT</description>
+	</DnaComponent>
+	<DnaComponent rdf:about="http://partsregistry.org/Part:BBa_B0010">
+		<displayId>BBa_B0010</displayId>
+		<name>B0010</name>
+		<description>T1 from E. coli rrnB</description>
+	</DnaComponent>
+	<DnaComponent rdf:about="http://partsregistry.org/Part:BBa_B0012">
+		<displayId>BBa_B0012</displayId>
+		<name>B0012</name>
+		<description>TE from coliphageT7</description>
+	</DnaComponent>
+</rdf:RDF>
