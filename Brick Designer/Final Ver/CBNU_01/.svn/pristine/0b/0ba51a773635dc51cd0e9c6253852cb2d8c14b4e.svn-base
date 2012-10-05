@@ -1,0 +1,105 @@
+﻿
+// Form_download.cs
+
+private void make_table()
+        {
+            DataTable dt = conn.GetSchema("tables");
+
+            foreach (DataRow row in dt.Rows)
+            {
+
+                if (row["TABLE_NAME"].ToString() == "deep_subparts")
+                {
+                    string d_qu = "Drop TABLE deep_subparts";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+                else if (row["TABLE_NAME"].ToString() == "sequences")
+                {
+                    string d_qu = "Drop TABLE sequences";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+                else if (row["TABLE_NAME"].ToString() == "specified_subparts")
+                {
+                    string d_qu = "Drop TABLE specified_subparts";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+                else if (row["TABLE_NAME"].ToString() == "specified_subscars")
+                {
+                    string d_qu = "Drop TABLE specified_subscars";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+                else if (row["TABLE_NAME"].ToString() == "categories")
+                {
+                    string d_qu = "Drop TABLE categories";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+                else if (row["TABLE_NAME"].ToString() == "features")
+                {
+                    string d_qu = "Drop TABLE features";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+                else if (row["TABLE_NAME"].ToString() == "parameterz")
+                {
+                    string d_qu = "Drop TABLE parameterz";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+
+            }
+
+
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["TABLE_NAME"].ToString() == "part")
+                {
+                    string d_qu = "Drop TABLE part";
+                    conm = new OleDbCommand(d_qu, conn);
+                    conm.ExecuteNonQuery();
+                }
+            }
+
+            string c_qu = "CREATE TABLE part( part_id LONG PRIMARY KEY,part_name LONGTEXT default null,part_short_name LONGTEXT default null,part_short_desc LONGTEXT default null,part_type LONGTEXT default null,part_status LONGTEXT default null,part_result LONGTEXT default null,part_nickname LONGTEXT default null,part_rating INT,part_url LONGTEXT default null,part_entered LONGTEXT default null,part_author LONGTEXT default null,best_quality LONGTEXT default null )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "create table deep_subparts ( part_id LONG not null, subpart_id LONG not null, part_sub_num LONG not null,  PRIMARY KEY(part_id, subpart_id, part_sub_num ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (subpart_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "CREATE TABLE sequences ( part_id LONG NOT NULL, seq_data LONGTEXT default null, PRIMARY KEY( part_id ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "CREATE TABLE specified_subparts ( part_id LONG not null, subpart_id LONG not null, part_sub_num LONG not null, PRIMARY KEY( part_id, subpart_id, part_sub_num ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (subpart_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "CREATE TABLE specified_subscars ( part_id LONG not null, part_scar_num LONG not null , scar_id LONG not null, scar_type LONGTEXT default null, scar_name LONGTEXT default null, scar_nickname LONGTEXT default null, scar_comments LONGTEXT default null, scar_seq LONGTEXT default null, PRIMARY KEY( part_id, part_scar_num ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "CREATE TABLE categories ( part_id LONG not null, category LONGTEXT NOT NULL, PRIMARY KEY( part_id, category ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "CREATE TABLE features ( part_id LONG not null, feature_id LONG not null, feature_title LONGTEXT default null, feature_type LONGTEXT default null, feature_direction LONGTEXT default null, feature_startpos LONG default null, feature_endpos LONG default null, PRIMARY KEY( part_id, feature_id ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+
+            c_qu = "CREATE TABLE parameterz ( part_id LONG not null, par_name LONGTEXT default null, par_value LONGTEXT default null, par_units LONGTEXT default null, par_url LONGTEXT default null, par_id 	LONG not null, par_m_data LONGTEXT default null, par_user_id LONG default null, par_user_name LONGTEXT default null, PRIMARY KEY( part_id, par_id ), FOREIGN KEY (part_id) REFERENCES part (part_id) ON DELETE CASCADE ON UPDATE CASCADE )";
+            conm = new OleDbCommand(c_qu, conn);
+            conm.ExecuteNonQuery();
+        }
+
+
+
+
+
+
+

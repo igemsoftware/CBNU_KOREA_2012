@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace BrickDesigner
+{
+    public class Brick_data
+    {
+        // 브릭 이름
+        public string str_brick_name;
+
+        // 브릭 설명
+        public string str_brick_desc;
+
+        // 서브 브릭 정보
+        public SortedList<int, Brick_sub_data> sl_subpart_list;
+
+        // 브릭 최종 시퀀스
+        public string str_sequence;
+
+        // 서브브릭 시퀀스
+        public string str_sub_sequence;
+
+        // 백본 시퀀스
+        public string str_bb_sequence;
+
+
+        public Brick_data()
+        {
+            sl_subpart_list = new SortedList<int,Brick_sub_data>();
+        }
+    }
+}

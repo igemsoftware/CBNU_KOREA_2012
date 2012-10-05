@@ -1,0 +1,682 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Resources;
+using System.Diagnostics;
+using System.Collections;
+using System.Drawing.Drawing2D;
+
+
+/* GDI+     )) GDI 더블버퍼, 리사이즈드로우 등등 속성 추가
+ *          )) Paint 함수에서 계속 새로이 그려줌
+ *          )) 호를 이용해서 원을 그리는데 그 위 이벤트나 아니면 확대되는 것을 추가해야 할듯
+ * 
+ * 
+ */
+
+
+namespace BrickDesigner
+{
+    public partial class Form_Main : Form
+    {
+
+        static class SizePB
+        {
+
+            public const int PBWIDTH = 60;
+            public const int PBHEIGHT = 60;
+            public const int PBPADDING = 6;
+
+        }
+
+        ImageList imgl_default; // 기본 브릭 이미지 리스트
+        ImageList imgl_click;
+
+        // 전체 브릭 갯수
+        int i_brick_num = 0;
+
+        /// <summary>
+        /// 브릭 정보 가지고 있는 Sorted List
+        /// </summary>
+        SortedList sl_Brick;
+
+        // 클릭 이벤트 BOOL
+        bool isPBMove = false;
+
+        // 현재 선택된 PB TAG
+        int i_seleted_PB_Tag;
+
+        // 현재 마우스로 선택한 위치 ( 상대적인 위치 )
+        int selectX;
+
+
+        /// <summary>
+        /// 폼 생성자
+        /// </summary>
+        public Form_Main()
+        {
+            InitializeComponent();
+            //base.ResizeRedraw = true;
+
+            base.SetStyle(ControlStyles.DoubleBuffer, true);
+            base.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            base.SetStyle(ControlStyles.ResizeRedraw, true);
+
+            this.make_ImgList();
+
+        }
+
+
+        /// <summary>
+        /// 브릭 아이콘에 쓰일 이미지 리스트 생성
+        /// </summary>
+        private void make_ImgList()
+        {
+            imgl_default = new ImageList();
+            imgl_default.ColorDepth = ColorDepth.Depth32Bit;
+            imgl_default.ImageSize = new Size(SizePB.PBWIDTH, SizePB.PBHEIGHT);
+            imgl_default.Images.Add("Regulatory", Properties.Resources._1);
+            imgl_default.Images.Add("RBS", Properties.Resources._2);
+            imgl_default.Images.Add("Protein_Domain", Properties.Resources._3);
+            imgl_default.Images.Add("Coding", Properties.Resources._4);
+            imgl_default.Images.Add("Translational_Unit", Properties.Resources._5);
+            imgl_default.Images.Add("Terminator", Properties.Resources._6);
+            imgl_default.Images.Add("DNA", Properties.Resources._7);
+            imgl_default.Images.Add("Plasmid_Backbone", Properties.Resources._8);
+            imgl_default.Images.Add("Plasmid", Properties.Resources._9);
+            imgl_default.Images.Add("Primer", Properties.Resources._10);
+            imgl_default.Images.Add("Generator", Properties.Resources._11);
+            imgl_default.Images.Add("Reporter", Properties.Resources._12);
+            imgl_default.Images.Add("Inverter", Properties.Resources._13);
+            imgl_default.Images.Add("Signalling", Properties.Resources._14);
+            imgl_default.Images.Add("Measurement", Properties.Resources._15);
+
+            imgl_click = new ImageList();
+            imgl_click.ColorDepth = ColorDepth.Depth32Bit;
+            imgl_click.ImageSize = new Size(SizePB.PBWIDTH, SizePB.PBHEIGHT);
+            imgl_click.Images.Add("Regulatory", Properties.Resources._1_click);
+            imgl_click.Images.Add("RBS", Properties.Resources._2_click);
+            imgl_click.Images.Add("Protein_Domain", Properties.Resources._3_click);
+            imgl_click.Images.Add("Coding", Properties.Resources._4_click);
+            imgl_click.Images.Add("Translational_Unit", Properties.Resources._5_click);
+            imgl_click.Images.Add("Terminator", Properties.Resources._6_click);
+            imgl_click.Images.Add("DNA", Properties.Resources._7_click);
+            imgl_click.Images.Add("Plasmid_Backbone", Properties.Resources._8_click);
+            imgl_click.Images.Add("Plasmid", Properties.Resources._9_click);
+            imgl_click.Images.Add("Primer", Properties.Resources._10_click);
+            imgl_click.Images.Add("Generator", Properties.Resources._10_click);
+            imgl_click.Images.Add("Reporter", Properties.Resources._10_click);
+            imgl_click.Images.Add("Inverter", Properties.Resources._10_click);
+            imgl_click.Images.Add("Signalling", Properties.Resources._10_click);
+            imgl_click.Images.Add("Measurement", Properties.Resources._10_click);
+        }
+
+
+        /// <summary>
+        /// 브릭 아이콘 1번 Regulatory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Regulatory");
+            fs1.ShowDialog();
+        }
+
+        /// <summary>
+        /// New 버튼 눌렀을 경우
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+
+        /// <summary>
+        /// 브릭 정보와 Key를 이용해서 SortedList에 추가한다.
+        /// </summary>
+        /// <param name="str_bName"></param>
+        /// <param name="str_bType"></param>
+        public void make_Brick_PB(string str_Brick_Name, string str_Brick_Type, string str_seq)
+        {
+            if (sl_Brick == null)
+            {
+                sl_Brick = new SortedList();
+            }
+
+            List<String> list_Brick_info = new List<string>();
+            list_Brick_info.Add(str_Brick_Name);
+            list_Brick_info.Add(str_Brick_Type);
+            list_Brick_info.Add(str_seq);
+
+            sl_Brick.Add(i_brick_num, list_Brick_info);
+
+            i_brick_num++;
+
+            add_Brick_PB();
+            listbox_From_Stl();
+            paint_p3();
+
+            Debug.WriteLine(panel2.Size);
+        }
+
+        /// <summary>
+        /// 리스트뷰에 데이터리스트에 있는 제목들 뿌려주기
+        /// </summary>
+        private void listbox_From_Stl()
+        {
+            try
+            {
+                lb_Brick.Items.Clear();
+                
+
+                for (int i = 0; i < sl_Brick.Count; i++ )
+                {
+                    lb_Brick.Items.Add("· "+((List<string>)(sl_Brick[i]))[0]);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 브릭 리스트를 이용해서 화면에 배치시킨다.
+        /// </summary>
+        public void add_Brick_PB()
+        {
+            // 컨트롤들 지우기
+            panel2.Controls.Clear();
+
+            if (i_brick_num == 0)
+            {
+                return;
+            }
+
+            Size si_PB;
+            Point pi_PB;
+
+            // 배경되는 라인 PB 추가
+
+            si_PB = new Size((SizePB.PBWIDTH * sl_Brick.Count) + (SizePB.PBPADDING*2), SizePB.PBHEIGHT);
+            //pi_PB = new Point(((panel2.Size.Width / 2) - ((SizePB.PBWIDTH / 2) * i_brick_num)), (panel2.Size.Height / 2) - (SizePB.PBHEIGHT / 2));
+            pi_PB = new Point( (SizePB.PBPADDING) ,(panel2.Size.Height / 2) - (SizePB.PBHEIGHT / 2));
+
+            PictureBox pb_line = new PictureBox();
+            pb_line.Name = "line";
+
+            pb_line.BackgroundImageLayout = ImageLayout.Stretch;
+            pb_line.BackgroundImage = Properties.Resources.line4;
+            pb_line.Location = pi_PB;
+            pb_line.Size = si_PB;
+
+            panel2.Controls.Add(pb_line);
+
+            si_PB = new Size(SizePB.PBWIDTH, SizePB.PBHEIGHT);
+
+            // 위에 올리기
+
+            for (int i = 0; i < i_brick_num; i++)
+            {
+                // 타입가지고 오기
+                string str_Brick_Type = ((List<string>)sl_Brick[i])[1];
+
+                /*
+                // 처음은 ((-25 * count) + (50)+i)
+                pi.X = (panel2.Size.Width / 2) + ((-(25 * sl_Brick.Count))) + (50 * i);
+                pi.Y = (panel2.Size.Height / 2) - 18;
+                */
+
+                pi_PB = new Point();
+                pi_PB.X = ((SizePB.PBWIDTH) * i) + SizePB.PBPADDING;
+                pi_PB.Y = 0;
+
+                PictureBox pb_Brick = new PictureBox();
+                pb_Brick.BackColor = Color.Transparent;
+
+                pb_Brick.MouseDown += pb_Brick_MouseDown;
+                pb_Brick.MouseMove += pb_Brick_MouseMove;
+                pb_Brick.MouseUp += pb_Brick_MouseUp;
+
+                ContextMenu cm_PB_munu = new System.Windows.Forms.ContextMenu();
+                cm_PB_munu.MenuItems.Add("Delete").Click += context_delete_click;
+                cm_PB_munu.Name = i.ToString();
+                pb_Brick.ContextMenu = cm_PB_munu;
+
+                // Tag 말고 이름으로 할 수 있을거 같은데..;;
+                pb_Brick.Tag = i;
+                pb_Brick.Name = i.ToString();
+
+                pb_Brick.Image = imgl_default.Images[str_Brick_Type];
+
+                pb_Brick.Location = pi_PB;
+                pb_Brick.Size = si_PB;
+
+                panel2.Controls.Add(pb_Brick);
+                pb_Brick.Parent = pb_line;
+            }
+        }
+
+        /// <summary>
+        /// delete 메뉴를 선택했을 경우 _ context
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void context_delete_click(object sender, EventArgs e)
+        {
+
+            ContextMenu ctm_temp = (sender as MenuItem).GetContextMenu();
+            int i_PB_tag = int.Parse(ctm_temp.Name);
+
+            Debug.WriteLine(i_PB_tag);
+
+            if (sl_Brick.Count == 1)
+            {
+                sl_Brick.Remove(0);
+                i_brick_num--;
+            }
+            else if (sl_Brick.Count == 2)
+            {
+                if (i_PB_tag == 0)
+                {
+                    swap_sl_brick(0, 1);
+                }
+                sl_Brick.Remove(sl_Brick.Count - 1);
+                i_brick_num--;
+            }
+            else if (sl_Brick.Count > 2)
+            {
+                for (int i = i_PB_tag; i < sl_Brick.Count - 1; i++)
+                {
+                    swap_sl_brick(i, i + 1);
+                }
+
+                sl_Brick.Remove(sl_Brick.Count - 1);
+                i_brick_num--;
+            }
+
+            add_Brick_PB();
+            listbox_From_Stl();
+            paint_p3();
+        }
+
+        /// <summary>
+        /// 마우스 다운
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void pb_Brick_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!isPBMove && e.Button == MouseButtons.Left)
+            {
+                isPBMove = true;
+                i_seleted_PB_Tag = (int)((PictureBox)sender).Tag;
+
+
+                (sender as PictureBox).Image = imgl_click.Images[((List<string>)sl_Brick[i_seleted_PB_Tag])[1]];
+            }
+            else if (!isPBMove && e.Button == MouseButtons.Right)
+            {
+                Debug.WriteLine("컨텍스트 메뉴");
+                i_seleted_PB_Tag = (int)((PictureBox)sender).Tag;
+
+                (sender as PictureBox).Image = imgl_click.Images[((List<string>)sl_Brick[i_seleted_PB_Tag])[1]];
+            }
+        }
+
+        /// <summary>
+        /// 마우스 무브
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void pb_Brick_MouseMove(object sender, MouseEventArgs e)
+        {
+
+            if (isPBMove && e.Button == MouseButtons.Left)
+            {
+                // 현재 선택한 X의 상대좌표 가지고 오기
+                selectX = (SizePB.PBWIDTH * i_seleted_PB_Tag) + SizePB.PBPADDING + e.X;
+
+                //Debug.WriteLine(selectX);
+
+                //////////////////////////////////////////////////////////////////////////
+                /* 
+                 * 현재 상대좌표가 전 PB의 반을 넘어선다면 전거와 위치, 데이터를 변경한다
+                 * 만약 그 전 PB가 없다면 하지 않는다.
+                 */
+                //////////////////////////////////////////////////////////////////////////
+
+                if (selectX <= (((SizePB.PBWIDTH) * (i_seleted_PB_Tag - 1)) + SizePB.PBPADDING + ((SizePB.PBWIDTH/2)+SizePB.PBPADDING)))
+                {
+                    if (i_seleted_PB_Tag != 0)
+                    {
+                        Control pre_PB = (panel2.Controls.Find((i_seleted_PB_Tag - 1).ToString(), true))[0];
+
+                        Point p_Current_PB_Pi = ((PictureBox)sender).Location;
+
+                        ((PictureBox)sender).Location = pre_PB.Location;
+                        ((PictureBox)sender).Tag = i_seleted_PB_Tag - 1;
+                        ((PictureBox)sender).Name = (i_seleted_PB_Tag - 1).ToString();
+
+                        pre_PB.Tag = i_seleted_PB_Tag;
+                        pre_PB.Name = i_seleted_PB_Tag.ToString();
+                        pre_PB.Location = p_Current_PB_Pi;
+                        p_Current_PB_Pi = ((PictureBox)sender).Location;
+
+                        swap_sl_brick(i_seleted_PB_Tag - 1, i_seleted_PB_Tag);
+
+                        i_seleted_PB_Tag = i_seleted_PB_Tag - 1;
+
+                        listbox_From_Stl();
+                        paint_p3();
+                    }
+                }
+                else if (selectX >= ((SizePB.PBWIDTH * (i_seleted_PB_Tag + 1)) + ((SizePB.PBWIDTH / 2) - SizePB.PBPADDING)))
+                {
+                    if (i_seleted_PB_Tag < (i_brick_num - 1))
+                    {
+                        Control temp_pb = (panel2.Controls.Find((i_seleted_PB_Tag + 1).ToString(), true))[0];
+
+                        Point p_Current_PB_Pi = ((PictureBox)sender).Location;
+
+                        ((PictureBox)sender).Location = temp_pb.Location;
+                        ((PictureBox)sender).Tag = i_seleted_PB_Tag + 1;
+                        ((PictureBox)sender).Name = (i_seleted_PB_Tag + 1).ToString();
+                        temp_pb.Tag = i_seleted_PB_Tag;
+                        temp_pb.Name = i_seleted_PB_Tag.ToString();
+                        temp_pb.Location = p_Current_PB_Pi;
+                        p_Current_PB_Pi = ((PictureBox)sender).Location;
+
+                        swap_sl_brick(i_seleted_PB_Tag, i_seleted_PB_Tag + 1);
+
+                        i_seleted_PB_Tag = i_seleted_PB_Tag + 1;
+
+                        listbox_From_Stl();
+                        paint_p3();
+                    }
+                }
+                
+                panel2.Update();
+            }
+        }
+
+        /// <summary>
+        /// 마우스 업
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void pb_Brick_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (isPBMove)
+            {
+                isPBMove = false;
+
+                (sender as PictureBox).Image = imgl_default.Images[((List<string>)sl_Brick[i_seleted_PB_Tag])[1]];
+
+                i_seleted_PB_Tag = -1;
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                (sender as PictureBox).Image = imgl_default.Images[((List<string>)sl_Brick[i_seleted_PB_Tag])[1]];
+            }
+
+
+        }
+
+
+
+
+        /// <summary>
+        /// sortedlist 데이터 스왑하기
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        private void swap_sl_brick(int i, int j)
+        {
+            List<string> li_list = (List<string>)(sl_Brick[j]);
+            sl_Brick[j] = sl_Brick[i];
+            sl_Brick[i] = li_list;
+        }
+
+        
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "RBS");
+            fs1.ShowDialog();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Protein_Domain");
+            fs1.ShowDialog();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Coding");
+            fs1.ShowDialog();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Translational_Unit");
+            fs1.ShowDialog();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Terminator");
+            fs1.ShowDialog();
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "DNA");
+            fs1.ShowDialog();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Plasmid");
+            fs1.ShowDialog();
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Primer");
+            fs1.ShowDialog();
+        }
+
+        private void btn_Add_Brick_Click(object sender, EventArgs e)
+        {
+            Form_Add fa1 = new Form_Add();
+            fa1.ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Generator");
+            fs1.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Reporter");
+            fs1.ShowDialog();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Inverter");
+            fs1.ShowDialog();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Signalling");
+            fs1.ShowDialog();
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            Form_Select fs1 = new Form_Select(this, "Measurement");
+            fs1.ShowDialog();
+        }
+
+        private void downloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form_Download fd1 = new Form_Download();
+            fd1.ShowDialog();
+        }
+
+        private void dBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form_DB fd1 = new Form_DB();
+            fd1.ShowDialog();
+        }
+
+        private void paint_p3()
+        {
+            if (sl_Brick.Count > 0)
+            {
+                Graphics _g = panel4.CreateGraphics();
+                _g.SmoothingMode = SmoothingMode.HighQuality;
+
+                _g.Clear(Color.White);
+
+                Random _r = new Random();
+                SolidBrush _s = new SolidBrush(Color.White);
+
+                string str_sum = "";
+                int i_sum = 0;
+                int p_do = 0;
+
+                for (int i = 0; i < sl_Brick.Count; i++)
+                {
+                    if ((sl_Brick[i] as List<string>)[2].Length <= 50)
+                    {
+                        str_sum += (sl_Brick[i] as List<string>)[2];
+                        i_sum += (sl_Brick[i] as List<string>)[2].Length;
+                    }
+                    else
+                    {
+                        str_sum += (sl_Brick[i] as List<string>)[2];
+                        i_sum += 50;
+                    }
+                    
+                }
+
+                int str_sum_num = str_sum.Length;
+
+                // 전체 길이를 가져왔으니 시퀀스마다를 계산해서 각도를 계산한다.
+
+                for (int i = 0; i < sl_Brick.Count; i++ )
+                {
+                    double temp1 = 0;
+
+                    if ((sl_Brick[i] as List<string>)[2].Length <= 50)
+                    {
+                        temp1 = (double)(sl_Brick[i] as List<string>)[2].Length / (double)i_sum;
+                    }
+                    else
+                    {
+                        temp1 = 50 / (double)i_sum;
+                    }
+
+                    
+                    Debug.WriteLine(temp1*360+"  "+Math.Round(temp1 * 360));
+
+                    //double temp1 = (double)(sl_Brick[i] as List<string>)[2].Length / (double)str_sum_num;
+                    
+                    // 0부터 그린다.
+
+                    _s.Color = Color.FromArgb(_r.Next(0, 255), _r.Next(0, 255), _r.Next(0, 255));
+
+                    if (i == 2)
+                    {
+                        _g.FillPie(_s, 90, 90, 280, 280, p_do, (int)Math.Round(temp1 * 360));
+                    }
+                    else
+                    {
+                        _g.FillPie(_s, 80, 80, 260, 260, p_do, (int)Math.Round(temp1 * 360));
+                    }
+
+                    
+
+                    //Debug.WriteLine(p_do + "  " + (p_do+temp1*360));
+
+                    p_do += (int)Math.Round(temp1 * 360);
+                    
+                }
+
+                _s.Color = Color.White;
+
+                _g.FillPie(_s, 100, 100, 220, 220, 0f, 360f);
+            }
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+           
+        }
+
+        private void clonningToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form_Cloning fc1 = new Form_Cloning();
+            fc1.ShowDialog();
+        }
+
+        
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+
+
+//         private void button1_Click(object sender, EventArgs e)
+//         {
+// 
+// 
+//             Graphics _graph = this.panel2.CreateGraphics();
+// 
+//             _graph.Clear(Color.Black);
+// 
+//             Pen _pen = new Pen(Color.Yellow, 2);
+//             /*
+//             _graph.DrawEllipse(_pen, ((panel2.Size.Width/2)-50), ((panel2.Size.Height/2)-50), 100, 100);
+//             _graph.DrawEllipse(_pen, ((panel2.Size.Width / 2) - 40), ((panel2.Size.Height / 2) - 40), 80, 80);
+//             */
+// 
+//             _graph.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+// 
+//             _graph.DrawArc(_pen, ((panel2.Size.Width / 2) - 75), ((panel2.Size.Height / 2) - 75), 150, 150, 0.0f, 90.0f);
+//             /*
+//             _graph.DrawArc(_pen, new Rectangle(((panel2.Size.Width/2)-75), ((panel2.Size.Height/2)-75), 150, 150), 0.0f, 90.0f);
+// 
+//             _pen.Color = Color.Red;
+//             _pen.Width = 2;
+// 
+//             _graph.DrawArc(_pen, new Rectangle(((panel2.Size.Width/2)-75), ((panel2.Size.Height/2)-75), 150, 150), 90.0f, 180.0f);
+// 
+//             _pen.Color = Color.White;
+//             _pen.Width = 2;
+// 
+//             _graph.DrawArc(_pen, new Rectangle(((panel2.Size.Width/2)-75), ((panel2.Size.Height/2)-75), 150, 150), 270.0f, 90.0f);
+//              */
+//         }
+    }
+}
+
+
+
+

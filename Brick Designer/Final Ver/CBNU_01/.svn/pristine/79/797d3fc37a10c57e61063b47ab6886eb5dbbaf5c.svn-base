@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+
+
+/*
+ * 다운로더.
+ * 이 다운로더는 다운로드폼에서 사용가능하다.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+namespace BrickDesigner
+{
+    class Downloader
+    {
+
+        
+
+
+
+    }
+}
